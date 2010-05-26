@@ -22,6 +22,8 @@ function analogpass(formObj) {
 	var threshold_abs = 70;
 	// How close in % should the relative change be
 	var threshold_rel = 70;
+	// How many fails is acceptable?
+	var max_fails = 2;
 	// Store the recent input stream deltas
 	var buffer;
 	// Store the time of the last input
@@ -80,7 +82,15 @@ function analogpass(formObj) {
 		print("Total Delta: " +absTotal);
 		print("Avg Accuracy " + Math.floor((10000 * relTotal)/ p1.pattern.length)/100 + "%");
 		print("PASSES: " + passes);
-		print("FAILS: " + fails);	
+		print("FAILS: " + fails);
+		if(fails > max_fails) {
+			print("<span class='fail'><b>YOU ARE NOT IAN!<b></span>");
+		} else if(fails === 1) {
+			print("<span class='pass'><b>YOU MIGHT BE IAN</b></span>");			
+		} else {
+			print("<span class='pass'><b>YOU ARE IAN! (or 1337 haxor)</b></span>");
+		}
+				
 	}
 	// --------------------------------------------------------------------------------
 	that.testAbs = function(a, b) {
@@ -125,7 +135,7 @@ function analogpass(formObj) {
 			return false;
 		});
 		buffer = [];
-		if(last == 0) {
+		if(last === 0) {
 			last = new Date();
 		}
 	}(formObj);	

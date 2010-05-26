@@ -12,7 +12,7 @@ var pat1 = {
 	value:"user@email.com",
 	
 	// The target input pattern stream
-	pattern:[940,110,71,72,256,297,127,96,97,71,192,113,87,96,160]
+	pattern:[940,110,71,72,256,297,127,96,97,71,192,113,87,96]
 }
 
 function analogpass(formObj) {
@@ -105,7 +105,9 @@ function analogpass(formObj) {
 		var form = $("#" + formObj);
 		
 		// Keypress event for target input area
-		$(input).bind("keypress", function() {
+		$(input).bind("keypress", function(e) {
+			// ignore enter
+			if(e.keyCode === 13) { return }
 			if(last > 0) {
 				var delta = new Date() - last;
 				buffer.push(delta);

@@ -32,7 +32,7 @@ function analogpass(formObj) {
 	var that = {};
 	// --------------------------------------------------------------------------------
 	that.reset = function() {
-		last = 0;
+		last = new Date();
 		buffer = [];
 		$("#output").html("");
 		$("#pw").val("");
@@ -79,6 +79,7 @@ function analogpass(formObj) {
 			absTotal += diff;
 			relTotal += rel;
 		}
+		// Report the results
 		print("Total Delta: " +absTotal);
 		print("Avg Accuracy " + Math.floor((10000 * relTotal)/ p1.pattern.length)/100 + "%");
 		print("PASSES: " + passes);

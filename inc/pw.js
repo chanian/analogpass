@@ -1,11 +1,3 @@
-// This is the pair the needed to store for an analog password
-var pat1 = {
-	// The target login
-	value:"tsb_news@hotmail.com",
-	
-	// The target input pattern stream
-	pattern:[2971,81,305,246,215,68,73,184,297,142,59,104,107,110,76,74,190,106,119,84,277]
-}
 /** --------------------------------------------------------------------------------
 * AnalogPass
 * 
@@ -14,6 +6,15 @@ var pat1 = {
 *
 * Ian Chan
 * --------------------------------------------------------------------------------*/
+// This is the pair the needed to store for an analog password
+var pat1 = {
+	// The target login
+	value:"user@email.com",
+	
+	// The target input pattern stream
+	pattern:[940,110,71,72,256,297,127,96,97,71,192,113,87,96,160]
+}
+
 function analogpass(formObj) {
 	// Should we check the first character (focus to input)
 	var ignoreFirst = true;
@@ -25,9 +26,8 @@ function analogpass(formObj) {
 	var buffer;
 	// Store the time of the last input
 	var last = 0;
-
+	// Create the new object to return
 	var that = {};
-	
 	// --------------------------------------------------------------------------------
 	that.reset = function() {
 		last = 0;
@@ -36,7 +36,7 @@ function analogpass(formObj) {
 		$("#pw").val("");
 	}	
 	// --------------------------------------------------------------------------------
-	that.checkPassword = function(p1, p2) {
+	that.checkPassword = function(p1, p2) {		
 		print(p1.pattern);
 		print(p1.value + " : " + p2.value);
 		print(p1.pattern.length + " : " + p2.pattern.length);
@@ -46,15 +46,17 @@ function analogpass(formObj) {
 			return;
 		}
 		if(p1.pattern.length !== p2.pattern.length) {
-			//printError("Pattern stream length didn't match");
-			//return;
-		}		
-		var i;
+			printError("Pattern stream length didn't match");
+			return;
+		}
+		print("Ignore first key? " + ignoreFirst);
+		// Setup the test variables
 		var absTotal = 0;
 		var relTotal = 0;
 		var passes = 0;
 		var fails = 0;
-		for(i = 0; i < p1.pattern.length; i++) {
+		var i = ignoreFirst ? 1 : 0;
+		for(i; i < p1.pattern.length; i++) {
 			var diff = Math.abs(p1.pattern[i] - p2.pattern[i]);
 			var rel = that.testRel(p1.pattern[i], p2.pattern[i]);
 			
@@ -103,16 +105,16 @@ function analogpass(formObj) {
 		var form = $("#" + formObj);
 		
 		// Keypress event for target input area
-		input.keypress(function() {
+		$(input).bind("keypress", function() {
 			if(last > 0) {
 				var delta = new Date() - last;
 				buffer.push(delta);
 			}
 			last = new Date();
 		});
-		
 		// Submit action for submit button
-		form.submit(function() {
+		$(form).bind("submit", function() {
+			// Create a pattern to match
 			var pattern = {
 				value:$("#pw").val(),
 				pattern:buffer
@@ -120,16 +122,15 @@ function analogpass(formObj) {
 			that.checkPassword(pattern, pat1);
 			return false;
 		});
-
 		buffer = [];
 		if(last == 0) {
 			last = new Date();
 		}
-	}(formObj);
-	
+	}(formObj);	
 	return that;
 }
 // --------------------------------------------------------------------------------
 $("document").ready(function() {
 	var ap = analogpass("analogpass");
+	$("#reset").bind("click", ap.reset);
 });

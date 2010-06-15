@@ -1,2 +1,2 @@
 This is an experimental implementation of analog passwords.
-Generally the password checking should happen on the client, but this sample demonstrates the potential.
+Generally the password checking should happen on the server, but this sample demonstrates the potential.
